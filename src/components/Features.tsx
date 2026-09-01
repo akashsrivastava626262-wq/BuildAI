@@ -1,153 +1,131 @@
-import { BadgeCheck, Brain, Home, LayoutDashboard, TrendingDown } from 'lucide-react'
-import SectionHeader from './ui/SectionHeader'
-import { STATS } from '../constants'
+import {
+  BarChart3,
+  Bot,
+  Brain,
+  Calculator,
+  Layers,
+  LineChart,
+  Shield,
+  Workflow,
+  Zap,
+} from 'lucide-react'
+
+const capabilities = [
+  {
+    icon: Brain,
+    title: 'Intelligent Design',
+    description:
+      'AI generates optimized floor plans, structural layouts, and interior recommendations from plot dimensions and photos — in minutes, not weeks.',
+    tag: 'Design AI',
+  },
+  {
+    icon: Calculator,
+    title: 'Cost Optimization',
+    description:
+      'Real-time material pricing, automated BOQ generation, and wholesale procurement — eliminating hidden markups and budget surprises.',
+    tag: 'Finance AI',
+  },
+  {
+    icon: LineChart,
+    title: 'Predictive Analytics',
+    description:
+      'Machine learning models forecast project timelines, identify delay risks, and recommend corrective actions before problems escalate.',
+    tag: 'Analytics',
+  },
+  {
+    icon: Workflow,
+    title: 'Workflow Automation',
+    description:
+      'End-to-end construction workflows — from permits to handover — orchestrated automatically with milestone tracking and alerts.',
+    tag: 'Automation',
+  },
+  {
+    icon: Bot,
+    title: 'Smart Recommendations',
+    description:
+      'Context-aware suggestions for materials, contractors, and design choices based on your budget, location, and project type.',
+    tag: 'Intelligence',
+  },
+  {
+    icon: Shield,
+    title: 'Verified Network',
+    description:
+      'Every architect, engineer, and contractor is identity-verified, license-checked, and performance-rated on the platform.',
+    tag: 'Trust',
+  },
+]
+
+const benefits = [
+  {
+    icon: Zap,
+    title: '10× faster planning',
+    stat: 'Minutes vs. weeks',
+    description: 'AI replaces months of architect back-and-forth with instant, accurate plans.',
+  },
+  {
+    icon: BarChart3,
+    title: 'Up to 22% cost savings',
+    stat: 'Wholesale materials',
+    description: 'Direct supplier pricing eliminates middleman markups on every material.',
+  },
+  {
+    icon: Layers,
+    title: 'Single source of truth',
+    stat: 'One dashboard',
+    description: 'Design, budget, materials, contractors, and progress — unified.',
+  },
+]
 
 export default function Features() {
   return (
-    <section id="features" className="relative py-20 md:py-28" aria-labelledby="features-heading">
-      <div className="absolute inset-0 bg-gradient-to-b from-navy via-navy-light to-teal-dark" />
-      <div className="absolute inset-0 texture-blueprint opacity-20" />
-
-      <div className="relative mx-auto max-w-7xl px-6">
-        <div className="mx-auto">
-          <SectionHeader
-            badge="Platform Features"
-            title="Everything to build your home — in one place"
-            subtitle="From the first blueprint to the last brick, we've got your family's home covered."
-            light
-          />
+    <section id="platform" className="section-dark relative py-24 md:py-32">
+      <div className="mx-auto max-w-7xl px-6 lg:px-8">
+        <div className="mx-auto max-w-2xl text-center">
+          <p className="text-xs font-medium uppercase tracking-[0.2em] text-white/40">Platform</p>
+          <h2 className="headline-lg mt-4 text-white">
+            AI that transforms every stage of{' '}
+            <span className="text-gradient-accent">home building</span>
+          </h2>
+          <p className="mt-4 text-lg text-white/50">
+            Enterprise-grade intelligence applied to residential construction — from the first
+            blueprint to the final inspection.
+          </p>
         </div>
 
-        <div className="mt-16 grid gap-6 md:grid-cols-2">
-          <article className="group relative overflow-hidden rounded-3xl bg-gradient-to-br from-terracotta/20 to-gold/10 p-8 ring-1 ring-white/10 md:col-span-2 lg:p-10">
-            <div className="absolute -right-16 -top-16 text-[120px] opacity-5">🏠</div>
-            <div className="relative grid gap-10 lg:grid-cols-2 lg:items-center">
-              <div>
-                <div className="mb-5 inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-1.5 text-xs font-semibold text-gold">
-                  <Brain className="h-4 w-4" />
-                  AI Home Planner
+        <div className="mt-20 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {capabilities.map((cap) => (
+            <article key={cap.title} className="feature-card group rounded-2xl p-8">
+              <div className="flex items-center justify-between">
+                <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-white/5 ring-1 ring-white/10 transition-all group-hover:bg-accent/10 group-hover:ring-accent/30">
+                  <cap.icon className="h-5 w-5 text-white/70 group-hover:text-accent-bright" />
                 </div>
-                <h3 className="font-display text-2xl font-bold text-white md:text-3xl">
-                  AI that designs your home — and prices every brick
-                </h3>
-                <p className="mt-4 leading-relaxed text-white/65">
-                  Upload your plot photo and dimensions. Get a complete floor plan, 3D layout,
-                  material list, labour estimate, and timeline — in minutes, not weeks.
-                </p>
-                <div className="mt-6 flex flex-wrap gap-2">
-                  {['Floor Plans', '3D Layout', 'Material List', 'Budget', 'Timeline'].map((tag) => (
-                    <span
-                      key={tag}
-                      className="rounded-lg bg-white/10 px-3 py-1.5 text-xs font-medium text-white/80 ring-1 ring-white/10"
-                    >
-                      {tag}
-                    </span>
-                  ))}
-                </div>
+                <span className="rounded-full bg-white/5 px-3 py-1 text-[10px] font-semibold uppercase tracking-wider text-white/30">
+                  {cap.tag}
+                </span>
               </div>
-              <div className="overflow-hidden rounded-2xl bg-white/5 p-6 ring-1 ring-white/10">
-                <div className="flex items-center gap-3">
-                  <div className="flex h-16 w-16 items-center justify-center rounded-xl bg-terracotta/30 text-2xl">
-                    📷
-                  </div>
-                  <div className="ai-shimmer h-1 flex-1 rounded-full" />
-                  <div className="flex h-16 w-16 items-center justify-center rounded-xl bg-teal/30 text-2xl">
-                    🏠
-                  </div>
-                </div>
-                <p className="mt-4 text-center text-xs font-medium text-gold">
-                  Plot Photo → AI Design → Complete Home Plan
-                </p>
-              </div>
-            </div>
-          </article>
+              <h3 className="font-display mt-6 text-xl font-semibold text-white">{cap.title}</h3>
+              <p className="mt-3 text-sm leading-relaxed text-white/45">{cap.description}</p>
+            </article>
+          ))}
+        </div>
 
-          <article className="rounded-3xl bg-white/5 p-8 ring-1 ring-white/10 backdrop-blur-sm transition-all hover:bg-white/10">
-            <div className="mb-5 inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-teal to-teal-dark shadow-lg">
-              <BadgeCheck className="h-7 w-7 text-white" />
-            </div>
-            <h3 className="font-display text-xl font-bold text-white">Verified Home Builders</h3>
-            <p className="mt-3 text-sm leading-relaxed text-white/60">
-              Architects, engineers, and contractors — all verified, licensed, and rated by real
-              homeowners.
-            </p>
-            <div className="mt-6 rounded-xl bg-white/5 p-4 ring-1 ring-white/10">
-              <p className="text-xs text-white/50">Builders on platform</p>
-              <p className="font-mono text-3xl font-bold text-gold">{STATS.professionals}</p>
-              <p className="text-xs text-white/40">Onboarding at launch</p>
-            </div>
-          </article>
-
-          <article className="rounded-3xl bg-white/5 p-8 ring-1 ring-white/10 backdrop-blur-sm transition-all hover:bg-white/10">
-            <div className="mb-5 inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-sage to-teal shadow-lg">
-              <TrendingDown className="h-7 w-7 text-white" />
-            </div>
-            <h3 className="font-display text-xl font-bold text-white">Wholesale Material Prices</h3>
-            <p className="mt-3 text-sm leading-relaxed text-white/60">
-              See live prices for cement, steel, bricks, tiles — and buy direct from verified
-              suppliers at wholesale rates.
-            </p>
-            <div className="mt-6 overflow-hidden rounded-xl ring-1 ring-white/10">
-              <table className="w-full text-sm">
-                <thead className="bg-white/5">
-                  <tr className="text-left text-xs text-white/50">
-                    <th className="px-4 py-2.5">Material</th>
-                    <th className="px-4 py-2.5">Retail</th>
-                    <th className="px-4 py-2.5">Wholesale</th>
-                  </tr>
-                </thead>
-                <tbody className="font-mono text-xs text-white/80">
-                  {[
-                    { name: 'Cement 50kg', retail: '₹380', wholesale: '₹328' },
-                    { name: 'TMT Steel/t', retail: '₹68,500', wholesale: '₹62,000' },
-                    { name: 'Bricks/1000', retail: '₹10,200', wholesale: '₹8,500' },
-                  ].map((row) => (
-                    <tr key={row.name} className="border-t border-white/5">
-                      <td className="px-4 py-2.5">{row.name}</td>
-                      <td className="px-4 py-2.5 line-through opacity-40">{row.retail}</td>
-                      <td className="px-4 py-2.5 font-semibold text-gold">{row.wholesale}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </article>
-
-          <article className="rounded-3xl bg-white/5 p-8 ring-1 ring-white/10 backdrop-blur-sm md:col-span-2">
-            <div className="grid gap-10 lg:grid-cols-2 lg:items-center">
-              <div>
-                <div className="mb-5 inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-gold to-terracotta shadow-lg">
-                  <LayoutDashboard className="h-7 w-7 text-white" />
+        {/* Benefits row */}
+        <div className="mt-24 glow-accent rounded-3xl border border-white/10 bg-white/[0.02] p-8 md:p-12">
+          <p className="text-center text-xs font-medium uppercase tracking-[0.2em] text-white/40">
+            Business Impact
+          </p>
+          <div className="mt-10 grid gap-8 md:grid-cols-3">
+            {benefits.map((b) => (
+              <div key={b.title} className="text-center md:text-left">
+                <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-accent/10 md:mx-0">
+                  <b.icon className="h-6 w-6 text-accent-bright" />
                 </div>
-                <h3 className="font-display text-xl font-bold text-white">
-                  Track Your Home Build — Every Step
-                </h3>
-                <p className="mt-3 leading-relaxed text-white/60">
-                  Foundation poured? Roof done? Tiles laid? See every milestone, payment, and
-                  delivery in one beautiful dashboard.
-                </p>
-                <div className="mt-5 flex items-center gap-3">
-                  <Home className="h-5 w-5 text-gold" />
-                  <span className="text-sm text-white/60">Built for homeowners, not contractors</span>
-                </div>
+                <p className="mt-4 font-mono text-sm font-medium text-accent-bright">{b.stat}</p>
+                <h3 className="font-display mt-2 text-lg font-semibold text-white">{b.title}</h3>
+                <p className="mt-2 text-sm text-white/45">{b.description}</p>
               </div>
-              <div className="space-y-3 rounded-2xl bg-white/5 p-6 ring-1 ring-white/10">
-                {[
-                  { label: '🏗️ Foundation & Structure', status: 'Ready' },
-                  { label: '🧱 Walls & Roofing', status: 'Ready' },
-                  { label: '🎨 Interiors & Finishing', status: 'Ready' },
-                  { label: '✅ Handover & Keys', status: 'Ready' },
-                ].map((m) => (
-                  <div key={m.label} className="flex items-center justify-between">
-                    <span className="text-sm text-white/80">{m.label}</span>
-                    <span className="rounded-full bg-teal/20 px-3 py-1 text-xs font-semibold text-teal-300">
-                      {m.status}
-                    </span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </article>
+            ))}
+          </div>
         </div>
       </div>
     </section>

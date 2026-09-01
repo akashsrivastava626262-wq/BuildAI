@@ -1,6 +1,7 @@
 import AnnouncementBar from './components/AnnouncementBar'
 import Navbar from './components/Navbar'
 import Hero from './components/Hero'
+import HomeShowcase from './components/HomeShowcase'
 import ProblemSection from './components/ProblemSection'
 import HowItWorks from './components/HowItWorks'
 import Features from './components/Features'
@@ -15,7 +16,7 @@ function App() {
     <>
       <a
         href="#main"
-        className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[100] focus:rounded-lg focus:bg-blue focus:px-4 focus:py-2 focus:text-white"
+        className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[100] focus:rounded-lg focus:bg-terracotta focus:px-4 focus:py-2 focus:text-white"
       >
         Skip to content
       </a>
@@ -23,6 +24,7 @@ function App() {
       <Navbar />
       <main id="main">
         <Hero />
+        <HomeShowcase />
         <ProblemSection />
         <HowItWorks />
         <Features />
@@ -33,12 +35,12 @@ function App() {
       </main>
       <Footer />
 
-      <div className="fixed inset-x-0 bottom-0 z-40 border-t border-mist/50 bg-white/90 p-3 backdrop-blur-xl md:hidden">
+      <div className="fixed inset-x-0 bottom-0 z-40 border-t border-mist/50 bg-white/95 p-3 backdrop-blur-xl md:hidden">
         <a
           href="#cta"
           className="btn-primary block w-full rounded-xl py-3.5 text-center text-sm font-semibold text-white"
         >
-          Enquire Now
+          Plan My Home
         </a>
       </div>
     </>

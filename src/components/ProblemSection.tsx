@@ -12,86 +12,84 @@ const painPoints = [
   {
     icon: AlertTriangle,
     title: 'Workers who disappear mid-project',
-    copy: 'No accountability when crews vanish or quality drops.',
-    color: 'from-orange-500 to-red-500',
+    copy: 'Your home build stops when crews vanish — leaving you stranded with half-built walls.',
+    emoji: '😤',
   },
   {
     icon: DollarSign,
     title: 'Quotes that double without warning',
-    copy: 'Hidden markups and vague estimates drain your savings.',
-    color: 'from-amber-500 to-orange-500',
+    copy: 'That ₹25L estimate becomes ₹40L — with no clear breakdown of where your money went.',
+    emoji: '💸',
   },
   {
     icon: Eye,
     title: "You never know the real price",
-    copy: "Retail vs wholesale? Labor vs materials? It's all a black box.",
-    color: 'from-purple-500 to-pink-500',
+    copy: 'Cement, steel, labour — every item is marked up. You pay retail when wholesale exists.',
+    emoji: '🔍',
   },
   {
     icon: FileSpreadsheet,
-    title: '"How much will this actually cost?"',
-    copy: "Spreadsheets and rough estimates can't plan a real build.",
-    color: 'from-blue-500 to-indigo-500',
+    title: '"How much will my home cost?"',
+    copy: 'No architect gives you a straight answer. Spreadsheets and guesses aren\'t a plan.',
+    emoji: '📊',
   },
   {
     icon: Clock,
-    title: 'Months lost to poor coordination',
-    copy: 'Architects, contractors, and suppliers never align.',
-    color: 'from-teal-500 to-cyan-500',
+    title: 'Years lost to poor coordination',
+    copy: 'Architect, contractor, supplier — none of them talk to each other. You become the manager.',
+    emoji: '⏳',
   },
   {
     icon: Users,
     title: 'Juggling 10+ suppliers alone',
-    copy: "Cement here, steel there — you're the project manager by default.",
-    color: 'from-rose-500 to-red-500',
+    copy: 'Cement from one shop, steel from another, tiles from a third. It\'s exhausting.',
+    emoji: '🏗️',
   },
 ]
 
 export default function ProblemSection() {
   return (
     <section className="relative py-20 md:py-28" aria-labelledby="problem-heading">
-      <div className="absolute inset-0 bg-gradient-to-b from-warm-white via-warm-gray to-warm-white" />
+      <div className="absolute inset-0 texture-concrete" />
 
       <div className="relative mx-auto max-w-7xl px-6">
         <div className="mx-auto">
           <SectionHeader
-            badge="The Problem"
-            title="Construction shouldn't feel like a gamble"
-            subtitle="You've seen it before — quotes that change overnight, workers who don't show up, and no one who can tell you what your project will actually cost until it's too late."
+            badge="Sound Familiar?"
+            title="Building a home shouldn't feel like a gamble"
+            subtitle="Every Indian family building a home faces the same frustrations. You deserve better."
           />
         </div>
 
         <div className="mt-16 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {painPoints.map((point, i) => (
+          {painPoints.map((point) => (
             <article
               key={point.title}
-              className="glass-card group relative overflow-hidden rounded-2xl p-7 transition-all duration-300"
-              style={{ animationDelay: `${i * 0.1}s` }}
+              className="glass-card group relative overflow-hidden rounded-2xl p-7"
             >
-              <div
-                className={`mb-5 inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br ${point.color} shadow-lg`}
-              >
-                <point.icon className="h-6 w-6 text-white" />
+              <span className="text-3xl">{point.emoji}</span>
+              <div className="mt-4 flex h-11 w-11 items-center justify-center rounded-xl bg-terracotta/10">
+                <point.icon className="h-5 w-5 text-terracotta" />
               </div>
-              <h3 className="font-display text-lg font-bold text-navy">{point.title}</h3>
-              <p className="mt-3 text-sm leading-relaxed text-slate">{point.copy}</p>
-              <div
-                className={`absolute -bottom-8 -right-8 h-24 w-24 rounded-full bg-gradient-to-br ${point.color} opacity-5 transition-opacity group-hover:opacity-10`}
-              />
+              <h3 className="font-display mt-4 text-lg font-bold text-navy">{point.title}</h3>
+              <p className="mt-2 text-sm leading-relaxed text-slate">{point.copy}</p>
+              <div className="absolute -bottom-4 -right-4 h-20 w-20 rounded-full bg-terracotta/5 transition-transform group-hover:scale-150" />
             </article>
           ))}
         </div>
 
-        <div className="mt-16 rounded-2xl bg-gradient-to-r from-navy to-navy-light p-8 text-center md:p-12">
-          <p className="font-display text-xl font-semibold text-white md:text-2xl">
-            You deserve to build with confidence — whether it&apos;s your first home, a school
-            expansion, or a commercial space.
+        <div className="mt-16 overflow-hidden rounded-3xl texture-brick p-8 text-center md:p-12">
+          <p className="font-display text-xl font-bold text-navy md:text-2xl">
+            🏠 Your family deserves a home built with honesty, clarity, and care.
+          </p>
+          <p className="mt-3 text-slate">
+            That&apos;s exactly what we&apos;re building BuildFlow for.
           </p>
           <a
-            href="#cta"
-            className="mt-6 inline-block text-sm font-semibold text-teal-300 hover:text-teal-200"
+            href="#how-it-works"
+            className="mt-6 inline-block text-sm font-bold text-terracotta hover:underline"
           >
-            We&apos;re building the solution →
+            See how we solve this →
           </a>
         </div>
       </div>

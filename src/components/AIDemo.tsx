@@ -55,8 +55,8 @@ export default function AIDemo() {
         <div className="mx-auto">
           <SectionHeader
             badge="Interactive Demo"
-            title="See AI build your plan in seconds"
-            subtitle="Enter your project details and watch our AI generate a floor plan, material list, and budget estimate — live."
+            title="See AI design your home in seconds"
+            subtitle="Enter your plot size and home type — watch our AI create a floor plan, material list, and budget estimate live."
           />
         </div>
 

@@ -23,11 +23,11 @@ export default function SectionHeader({
         <span
           className={`inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-xs font-semibold uppercase tracking-widest ${
             light
-              ? 'bg-white/10 text-teal-300 ring-1 ring-white/20'
-              : 'bg-blue/10 text-blue ring-1 ring-blue/20'
+              ? 'bg-white/10 text-gold ring-1 ring-white/20'
+              : 'bg-terracotta/10 text-terracotta ring-1 ring-terracotta/20'
           }`}
         >
-          <span className={`h-1.5 w-1.5 rounded-full ${light ? 'bg-teal-300' : 'bg-blue'} animate-pulse`} />
+          <span className={`h-1.5 w-1.5 rounded-full ${light ? 'bg-gold' : 'bg-terracotta'} animate-pulse`} />
           {badge}
         </span>
       )}
@@ -49,7 +49,7 @@ export default function SectionHeader({
 
 export function GradientText({ children }: { children: ReactNode }) {
   return (
-    <span className="bg-gradient-to-r from-blue via-teal to-cyan-500 bg-clip-text text-transparent">
+    <span className="bg-gradient-to-r from-terracotta via-gold to-teal bg-clip-text text-transparent">
       {children}
     </span>
   )

@@ -48,9 +48,9 @@ export default function TrustSection() {
       <div className="relative mx-auto max-w-7xl px-6">
         <div className="mx-auto">
           <SectionHeader
-            badge="Why BuildFlow"
-            title="Enterprise-grade platform, built for everyone"
-            subtitle="We're building the construction platform we wished existed — transparent, affordable, and powered by cutting-edge AI."
+            badge="Our Promise"
+            title="A platform built on trust — for your family's home"
+            subtitle="We're building BuildFlow because every Indian family deserves a transparent, honest way to build their dream home."
           />
         </div>
 

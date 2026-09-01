@@ -42,8 +42,7 @@ export default function FinalCTA() {
               id="cta-heading"
               className="font-display mt-5 text-3xl font-bold text-navy md:text-4xl lg:text-5xl"
             >
-              Let&apos;s build something{' '}
-              <span className="text-gradient">extraordinary</span>
+              Let&apos;s build your <span className="text-gradient">dream home</span>
             </h2>
             <p className="mt-5 text-lg leading-relaxed text-slate">
               Whether you&apos;re planning your dream home, a commercial space, or an institutional

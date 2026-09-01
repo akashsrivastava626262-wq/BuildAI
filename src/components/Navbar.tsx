@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react'
-import { Building2, Menu, X } from 'lucide-react'
+import { Home, Menu, X } from 'lucide-react'
 
 const navLinks = [
+  { label: 'Home Types', href: '#home-types' },
   { label: 'How It Works', href: '#how-it-works' },
   { label: 'Features', href: '#features' },
   { label: 'AI Demo', href: '#ai-demo' },
-  { label: 'Why Us', href: '#trust' },
 ]
 
 export default function Navbar() {
@@ -14,7 +14,6 @@ export default function Navbar() {
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 60)
-    window.scrollY > 60 && setScrolled(true)
     window.addEventListener('scroll', onScroll)
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
@@ -22,9 +21,7 @@ export default function Navbar() {
   return (
     <header
       className={`fixed inset-x-0 top-[42px] z-50 transition-all duration-500 ${
-        scrolled
-          ? 'glass-light shadow-lg shadow-navy/5'
-          : 'bg-transparent'
+        scrolled ? 'glass-light shadow-md' : 'bg-transparent'
       }`}
     >
       <nav
@@ -32,14 +29,13 @@ export default function Navbar() {
         aria-label="Main navigation"
       >
         <a href="#" className="group flex items-center gap-3">
-          <div className="relative flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-blue to-teal shadow-lg shadow-blue/30 transition-transform group-hover:scale-105">
-            <Building2 className="h-5 w-5 text-white" strokeWidth={2.5} />
-            <div className="absolute inset-0 rounded-xl bg-white/20 opacity-0 transition-opacity group-hover:opacity-100" />
+          <div className="relative flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-terracotta to-brick shadow-lg shadow-terracotta/30 transition-transform group-hover:scale-105">
+            <Home className="h-5 w-5 text-white" strokeWidth={2.5} />
           </div>
           <div>
             <span className="font-display text-xl font-bold text-navy">BuildFlow</span>
-            <span className="block text-[10px] font-medium uppercase tracking-widest text-teal">
-              AI Construction
+            <span className="block text-[10px] font-semibold uppercase tracking-widest text-terracotta">
+              Home Builders
             </span>
           </div>
         </a>
@@ -49,7 +45,7 @@ export default function Navbar() {
             <a
               key={link.href}
               href={link.href}
-              className="rounded-lg px-4 py-2 text-sm font-medium text-slate transition-all hover:bg-blue/5 hover:text-blue"
+              className="rounded-lg px-4 py-2 text-sm font-medium text-slate transition-all hover:bg-terracotta/5 hover:text-terracotta"
             >
               {link.label}
             </a>
@@ -77,12 +73,12 @@ export default function Navbar() {
       </nav>
 
       {mobileOpen && (
-        <div className="border-t border-mist/50 bg-white/95 px-6 py-4 backdrop-blur-xl md:hidden">
+        <div className="border-t border-mist bg-white/95 px-6 py-4 backdrop-blur-xl md:hidden">
           {navLinks.map((link) => (
             <a
               key={link.href}
               href={link.href}
-              className="block rounded-lg py-3 text-sm font-medium text-slate hover:text-blue"
+              className="block rounded-lg py-3 text-sm font-medium text-slate hover:text-terracotta"
               onClick={() => setMobileOpen(false)}
             >
               {link.label}

@@ -1,36 +1,61 @@
 # BuildFlow — AI-Powered Construction Platform
 
-Landing page for BuildFlow, an AI-powered construction ecosystem.
+Full-stack construction planning platform with AI-powered home design, project management, and payments.
 
 ## Live Site
 
 **https://akashsrivastava626262-wq.github.io/BuildAI/**
 
-## Features
+## Project Structure
 
-- Full responsive landing page (React + Tailwind CSS)
-- Interactive AI plan generator demo
-- 7-step "How It Works" journey
-- Material price comparison showcase
-- Trust & testimonials section
+```
+├── src/                  # Frontend (React + Vite + Tailwind)
+├── backend/              # Backend API (Express + Prisma + PostgreSQL)
+├── docker-compose.yml    # PostgreSQL for local development
+└── README.md
+```
 
-## Development
+## Frontend
 
 ```bash
 npm install
-npm run dev
+npm run dev        # http://localhost:5173
+npm run build      # Production build
 ```
 
-## Build
+**Stack:** React 19, TypeScript, Vite, Tailwind CSS v4
+
+## Backend
 
 ```bash
-npm run build
+docker compose up -d          # Start PostgreSQL
+cd backend
+cp .env.example .env
+npm install
+npm run db:push
+npm run db:seed
+npm run dev                   # http://localhost:4000
 ```
 
-## Tech Stack
+**Stack:** Node.js, Express, TypeScript, Prisma, PostgreSQL, Stripe, JWT
 
-- React 19 + TypeScript
-- Vite
-- Tailwind CSS v4
-- Lucide React icons
-- Deployed via GitHub Pages
+See **[backend/README.md](backend/README.md)** for full API documentation.
+
+### API Health Check
+
+```
+GET http://localhost:4000/health
+```
+
+### Seed Accounts
+
+| Role | Email | Password |
+|------|-------|----------|
+| Admin | admin@buildflow.ai | Admin@123456 |
+| Homeowner | homeowner@example.com | Homeowner@123 |
+| Contractor | contractor@example.com | Contractor@123 |
+
+## Contact
+
+- Email: akashsrivastava626262@gmail.com
+- Phone: +91 84168 35773

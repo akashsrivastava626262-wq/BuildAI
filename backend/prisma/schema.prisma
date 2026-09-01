@@ -1,0 +1,173 @@
+// Prisma schema for BuildFlow construction platform
+// PostgreSQL chosen for relational integrity: users ↔ projects ↔ materials ↔ payments
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  HOMEOWNER
+  CONTRACTOR
+  ADMIN
+}
+
+enum ProjectStatus {
+  DRAFT
+  PLANNING
+  APPROVED
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+}
+
+enum EnquiryStatus {
+  NEW
+  CONTACTED
+  QUALIFIED
+  CLOSED
+}
+
+enum PaymentStatus {
+  PENDING
+  PROCESSING
+  SUCCEEDED
+  FAILED
+  REFUNDED
+}
+
+model User {
+  id           String    @id @default(cuid())
+  email        String    @unique
+  passwordHash String
+  name         String
+  phone        String?
+  role         UserRole  @default(HOMEOWNER)
+  isVerified   Boolean   @default(false)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  projects  Project[]
+  payments  Payment[]
+  adminLogs AdminLog[]
+
+  @@index([role])
+  @@map("users")
+}
+
+model Project {
+  id          String        @id @default(cuid())
+  userId      String
+  title       String
+  description String?
+  projectType String        @default("RESIDENTIAL")
+  status      ProjectStatus @default(DRAFT)
+  plotLength  Float?
+  plotWidth   Float?
+  address     String?
+  city        String?
+  // AI-generated outputs stored as JSON
+  aiFloorPlan Json?
+  aiBudget    Json?
+  aiTimeline  Json?
+  aiMaterials Json?
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  materials Material[]
+  payments  Payment[]
+
+  @@index([userId])
+  @@index([status])
+  @@map("projects")
+}
+
+model Material {
+  id        String   @id @default(cuid())
+  projectId String
+  name      String
+  quantity  Float
+  unit      String   @default("units")
+  unitPrice Float?
+  supplier  String?
+  category  String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@index([projectId])
+  @@map("materials")
+}
+
+model Enquiry {
+  id        String        @id @default(cuid())
+  name      String
+  email     String
+  phone     String?
+  company   String?
+  message   String?
+  status    EnquiryStatus @default(NEW)
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+
+  @@index([status])
+  @@index([email])
+  @@map("enquiries")
+}
+
+model Payment {
+  id                    String        @id @default(cuid())
+  userId                String
+  projectId             String?
+  stripePaymentIntentId String?       @unique
+  stripeSessionId       String?       @unique
+  amount                Int // in smallest currency unit (paise for INR)
+  currency              String        @default("inr")
+  status                PaymentStatus @default(PENDING)
+  description           String?
+  metadata              Json?
+  createdAt             DateTime      @default(now())
+  updatedAt             DateTime      @updatedAt
+
+  user    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  project Project? @relation(fields: [projectId], references: [id], onDelete: SetNull)
+
+  @@index([userId])
+  @@index([status])
+  @@map("payments")
+}
+
+model AdminLog {
+  id         String   @id @default(cuid())
+  adminId    String
+  action     String
+  entityType String?
+  entityId   String?
+  metadata   Json?
+  ipAddress  String?
+  createdAt  DateTime @default(now())
+
+  admin User @relation(fields: [adminId], references: [id], onDelete: Cascade)
+
+  @@index([adminId])
+  @@index([createdAt])
+  @@map("admin_logs")
+}
+
+model PasswordResetToken {
+  id        String   @id @default(cuid())
+  userId    String
+  token     String   @unique
+  expiresAt DateTime
+  used      Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@index([token])
+  @@map("password_reset_tokens")
+}

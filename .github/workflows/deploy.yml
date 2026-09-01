@@ -27,6 +27,8 @@ jobs:
 
       - run: npm ci
       - run: npm run build
+        env:
+          VITE_API_URL: https://pursuant-assure-scoop-ottawa.trycloudflare.com
 
       - name: Deploy to gh-pages branch
         uses: peaceiris/actions-gh-pages@v4

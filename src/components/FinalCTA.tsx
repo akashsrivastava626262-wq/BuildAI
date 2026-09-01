@@ -1,20 +1,43 @@
 import { useState } from 'react'
-import { ArrowRight, Mail, Phone, Send } from 'lucide-react'
+import { AlertCircle, ArrowRight, Loader2, Mail, Phone, Send } from 'lucide-react'
 import { CONTACT } from '../constants'
+import { ApiError, submitEnquiry } from '../lib/api'
 
 export default function FinalCTA() {
   const [submitted, setSubmitted] = useState(false)
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+    setLoading(true)
+    setError('')
+
     const form = e.currentTarget
     const data = new FormData(form)
-    const subject = encodeURIComponent('BuildFlow Demo Request')
-    const body = encodeURIComponent(
-      `Name: ${data.get('name')}\nEmail: ${data.get('email')}\nPhone: ${data.get('phone')}\nCompany: ${data.get('company')}\nMessage: ${data.get('message')}`,
-    )
-    window.location.href = `mailto:${CONTACT.email}?subject=${subject}&body=${body}`
-    setSubmitted(true)
+
+    try {
+      const response = await submitEnquiry({
+        name: String(data.get('name') ?? ''),
+        email: String(data.get('email') ?? ''),
+        phone: String(data.get('phone') ?? '') || undefined,
+        company: String(data.get('company') ?? '') || undefined,
+        message: String(data.get('message') ?? '') || undefined,
+      })
+      setSubmitted(true)
+      form.reset()
+      if (response.message) {
+        // message available for future UI use
+      }
+    } catch (err) {
+      const message =
+        err instanceof ApiError
+          ? err.message
+          : 'Unable to submit your request. Please email us directly.'
+      setError(message)
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
@@ -71,49 +94,71 @@ export default function FinalCTA() {
               <div className="mt-8 rounded-2xl bg-accent/10 p-6 text-center">
                 <p className="font-medium text-accent-bright">Thank you!</p>
                 <p className="mt-2 text-sm text-white/50">
-                  Your email client should open. Or reach us at {CONTACT.email}
+                  Your demo request has been submitted. We&apos;ll contact you at the email you
+                  provided within 24 hours.
                 </p>
               </div>
             ) : (
               <form onSubmit={handleSubmit} className="mt-8 space-y-4">
+                {error && (
+                  <div className="flex items-start gap-3 rounded-xl border border-red-500/20 bg-red-500/10 p-4">
+                    <AlertCircle className="mt-0.5 h-4 w-4 shrink-0 text-red-400" />
+                    <p className="text-sm text-red-200/80">{error}</p>
+                  </div>
+                )}
                 <input
                   name="name"
                   required
                   placeholder="Full name"
-                  className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3.5 text-sm text-white placeholder:text-white/30 focus:border-accent/50 focus:outline-none"
+                  disabled={loading}
+                  className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3.5 text-sm text-white placeholder:text-white/30 focus:border-accent/50 focus:outline-none disabled:opacity-50"
                 />
                 <input
                   name="email"
                   type="email"
                   required
                   placeholder="Work email"
-                  className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3.5 text-sm text-white placeholder:text-white/30 focus:border-accent/50 focus:outline-none"
+                  disabled={loading}
+                  className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3.5 text-sm text-white placeholder:text-white/30 focus:border-accent/50 focus:outline-none disabled:opacity-50"
                 />
                 <input
                   name="phone"
                   type="tel"
                   required
                   placeholder="Phone number"
-                  className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3.5 text-sm text-white placeholder:text-white/30 focus:border-accent/50 focus:outline-none"
+                  disabled={loading}
+                  className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3.5 text-sm text-white placeholder:text-white/30 focus:border-accent/50 focus:outline-none disabled:opacity-50"
                 />
                 <input
                   name="company"
                   placeholder="Company / Project type"
-                  className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3.5 text-sm text-white placeholder:text-white/30 focus:border-accent/50 focus:outline-none"
+                  disabled={loading}
+                  className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3.5 text-sm text-white placeholder:text-white/30 focus:border-accent/50 focus:outline-none disabled:opacity-50"
                 />
                 <textarea
                   name="message"
                   rows={3}
                   placeholder="Tell us about your project..."
-                  className="w-full resize-none rounded-xl border border-white/10 bg-white/5 px-4 py-3.5 text-sm text-white placeholder:text-white/30 focus:border-accent/50 focus:outline-none"
+                  disabled={loading}
+                  className="w-full resize-none rounded-xl border border-white/10 bg-white/5 px-4 py-3.5 text-sm text-white placeholder:text-white/30 focus:border-accent/50 focus:outline-none disabled:opacity-50"
                 />
                 <button
                   type="submit"
-                  className="btn-primary flex w-full items-center justify-center gap-2 rounded-xl py-4 text-sm"
+                  disabled={loading}
+                  className="btn-primary flex w-full items-center justify-center gap-2 rounded-xl py-4 text-sm disabled:opacity-60"
                 >
-                  <Send className="h-4 w-4" />
-                  Book a Demo
-                  <ArrowRight className="h-4 w-4" />
+                  {loading ? (
+                    <>
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                      Submitting...
+                    </>
+                  ) : (
+                    <>
+                      <Send className="h-4 w-4" />
+                      Book a Demo
+                      <ArrowRight className="h-4 w-4" />
+                    </>
+                  )}
                 </button>
               </form>
             )}

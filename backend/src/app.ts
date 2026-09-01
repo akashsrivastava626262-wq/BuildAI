@@ -38,9 +38,27 @@ const app = express()
 app.use(helmet())
 
 // CORS
+const allowedOrigins = new Set([
+  config.frontendUrl,
+  'http://localhost:5173',
+  'https://akashsrivastava626262-wq.github.io',
+  'https://akashsrivastava626262-wq.github.io/BuildAI',
+])
+
 app.use(
   cors({
-    origin: [config.frontendUrl, 'http://localhost:5173', 'https://akashsrivastava626262-wq.github.io'],
+    origin(origin, callback) {
+      if (
+        !origin ||
+        allowedOrigins.has(origin) ||
+        origin.endsWith('.onrender.com') ||
+        origin.endsWith('.trycloudflare.com')
+      ) {
+        callback(null, true)
+        return
+      }
+      callback(null, false)
+    },
     credentials: true,
   }),
 )

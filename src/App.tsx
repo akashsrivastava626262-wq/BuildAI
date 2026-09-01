@@ -1,3 +1,4 @@
+import AnnouncementBar from './components/AnnouncementBar'
 import Navbar from './components/Navbar'
 import Hero from './components/Hero'
 import ProblemSection from './components/ProblemSection'
@@ -18,6 +19,7 @@ function App() {
       >
         Skip to content
       </a>
+      <AnnouncementBar />
       <Navbar />
       <main id="main">
         <Hero />
@@ -31,13 +33,12 @@ function App() {
       </main>
       <Footer />
 
-      {/* Mobile sticky CTA */}
-      <div className="fixed inset-x-0 bottom-0 z-40 border-t border-mist bg-white p-3 md:hidden">
+      <div className="fixed inset-x-0 bottom-0 z-40 border-t border-mist/50 bg-white/90 p-3 backdrop-blur-xl md:hidden">
         <a
           href="#cta"
-          className="block w-full rounded-lg bg-blue py-3 text-center text-sm font-semibold text-white"
+          className="btn-primary block w-full rounded-xl py-3.5 text-center text-sm font-semibold text-white"
         >
-          Start Your Project
+          Enquire Now
         </a>
       </div>
     </>

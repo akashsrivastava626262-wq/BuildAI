@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import {
+  ArrowRight,
   Camera,
   ClipboardList,
   LayoutDashboard,
@@ -8,6 +9,7 @@ import {
   UserPlus,
   Users,
 } from 'lucide-react'
+import SectionHeader from './ui/SectionHeader'
 
 const steps = [
   {
@@ -186,56 +188,60 @@ export default function HowItWorks() {
   const [active, setActive] = useState(0)
 
   return (
-    <section id="how-it-works" className="py-16 md:py-20" aria-labelledby="how-heading">
-      <div className="mx-auto max-w-7xl px-6">
-        <div className="mx-auto max-w-3xl text-center">
-          <h2
-            id="how-heading"
-            className="font-display text-3xl font-semibold text-navy md:text-4xl"
-          >
-            From idea to keys in hand — one platform.
-          </h2>
-          <p className="mt-4 text-lg text-slate">
-            Seven steps. Full transparency. You&apos;re always in control.
-          </p>
+    <section id="how-it-works" className="relative py-20 md:py-28" aria-labelledby="how-heading">
+      <div className="absolute inset-0 bg-white" />
+      <div className="relative mx-auto max-w-7xl px-6">
+        <div className="mx-auto">
+          <SectionHeader
+            badge="How It Works"
+            title="From idea to keys in hand — one platform"
+            subtitle="Seven simple steps. Full transparency. You're always in control."
+          />
         </div>
 
-        <div className="mt-12 grid gap-8 lg:grid-cols-2">
+        <div className="mt-16 grid gap-10 lg:grid-cols-2">
           <div className="space-y-2">
             {steps.map((step, i) => (
               <button
                 key={step.num}
                 type="button"
                 onClick={() => setActive(i)}
-                className={`flex w-full items-start gap-4 rounded-xl p-4 text-left transition-all ${
+                className={`group flex w-full items-start gap-4 rounded-2xl p-5 text-left transition-all duration-300 ${
                   active === i
-                    ? 'bg-blue/5 ring-2 ring-blue'
+                    ? 'bg-gradient-to-r from-blue/10 to-teal/5 shadow-lg shadow-blue/10 ring-2 ring-blue/30'
                     : 'hover:bg-warm-gray'
                 }`}
               >
                 <span
-                  className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-sm font-semibold ${
-                    active === i ? 'bg-blue text-white' : 'bg-mist text-slate'
+                  className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-sm font-bold transition-all ${
+                    active === i
+                      ? 'bg-gradient-to-br from-blue to-teal text-white shadow-lg shadow-blue/30'
+                      : 'bg-mist text-slate group-hover:bg-blue/10 group-hover:text-blue'
                   }`}
                 >
                   {step.num}
                 </span>
                 <div>
-                  <p className="font-display font-semibold text-navy">{step.title}</p>
-                  <p className="mt-0.5 text-sm text-slate">{step.desc}</p>
+                  <p className="font-display font-bold text-navy">{step.title}</p>
+                  <p className="mt-1 text-sm text-slate">{step.desc}</p>
                 </div>
               </button>
             ))}
           </div>
 
-          <div>
-            <StepVisual type={steps[active].visual} />
-            <a
-              href="#cta"
-              className="mt-6 inline-flex items-center gap-1 text-sm font-semibold text-teal hover:underline"
-            >
-              Start Your Project — It&apos;s Free →
-            </a>
+          <div className="gradient-border rounded-3xl p-1">
+            <div className="overflow-hidden rounded-3xl bg-white p-2">
+              <StepVisual type={steps[active].visual} />
+              <div className="p-4">
+                <a
+                  href="#cta"
+                  className="inline-flex items-center gap-2 text-sm font-semibold text-blue hover:text-blue-dark"
+                >
+                  Enquire Now — It&apos;s Free
+                  <ArrowRight className="h-4 w-4" />
+                </a>
+              </div>
+            </div>
           </div>
         </div>
       </div>

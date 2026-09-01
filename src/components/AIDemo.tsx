@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Loader2, Sparkles, Upload } from 'lucide-react'
+import SectionHeader from './ui/SectionHeader'
 
 type DemoPhase = 'idle' | 'uploading' | 'analyzing' | 'generating' | 'complete'
 
@@ -47,27 +48,21 @@ export default function AIDemo() {
   }
 
   return (
-    <section id="ai-demo" className="py-16 md:py-20" aria-labelledby="ai-demo-heading">
-      <div className="mx-auto max-w-7xl px-6">
-        <div className="mx-auto max-w-3xl text-center">
-          <span className="inline-flex items-center gap-1.5 rounded-full bg-blue/10 px-4 py-1.5 text-sm font-medium text-blue">
-            <Sparkles className="h-4 w-4" />
-            Try the AI Planner
-          </span>
-          <h2
-            id="ai-demo-heading"
-            className="font-display mt-4 text-3xl font-semibold text-navy md:text-4xl"
-          >
-            See AI build your plan in seconds
-          </h2>
-          <p className="mt-4 text-lg text-slate">
-            Enter your project details and watch our AI generate a floor plan, material list, and
-            budget estimate — live.
-          </p>
+    <section id="ai-demo" className="relative py-20 md:py-28" aria-labelledby="ai-demo-heading">
+      <div className="absolute inset-0 bg-gradient-to-b from-warm-white via-blue/5 to-warm-white" />
+
+      <div className="relative mx-auto max-w-7xl px-6">
+        <div className="mx-auto">
+          <SectionHeader
+            badge="Interactive Demo"
+            title="See AI build your plan in seconds"
+            subtitle="Enter your project details and watch our AI generate a floor plan, material list, and budget estimate — live."
+          />
         </div>
 
-        <div className="mx-auto mt-12 max-w-4xl overflow-hidden rounded-2xl border border-mist bg-white shadow-xl shadow-navy/8">
-          <div className="border-b border-mist bg-navy px-6 py-4">
+        <div className="gradient-border mx-auto mt-16 max-w-4xl overflow-hidden rounded-3xl p-1 shadow-2xl shadow-blue/10">
+        <div className="overflow-hidden rounded-3xl bg-white">
+          <div className="border-b border-white/10 bg-gradient-to-r from-navy to-navy-light px-6 py-4">
             <div className="flex items-center gap-2">
               <div className="h-3 w-3 rounded-full bg-red-400" />
               <div className="h-3 w-3 rounded-full bg-amber-400" />
@@ -144,7 +139,7 @@ export default function AIDemo() {
                   <button
                     type="button"
                     onClick={runDemo}
-                    className="flex w-full items-center justify-center gap-2 rounded-lg bg-blue py-3 text-sm font-semibold text-white transition-colors hover:bg-blue-dark"
+                    className="btn-glow btn-primary flex w-full items-center justify-center gap-2 rounded-xl py-3 text-sm font-semibold text-white"
                   >
                     <Sparkles className="h-4 w-4" />
                     Generate AI Plan
@@ -261,6 +256,7 @@ export default function AIDemo() {
               )}
             </div>
           </div>
+        </div>
         </div>
       </div>
     </section>

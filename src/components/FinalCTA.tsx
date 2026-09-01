@@ -1,128 +1,215 @@
 import { useState } from 'react'
-import { ArrowRight, ChevronDown, Phone } from 'lucide-react'
+import { ChevronDown, Mail, MapPin, Phone, Send } from 'lucide-react'
+import { CONTACT } from '../constants'
 
 export default function FinalCTA() {
-  const [formOpen, setFormOpen] = useState(false)
+  const [formOpen, setFormOpen] = useState(true)
   const [submitted, setSubmitted] = useState(false)
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+    const form = e.currentTarget
+    const data = new FormData(form)
+    const name = data.get('name')
+    const email = data.get('email')
+    const phone = data.get('phone')
+    const project = data.get('project')
+    const message = data.get('message')
+
+    const subject = encodeURIComponent(`BuildFlow Enquiry — ${project}`)
+    const body = encodeURIComponent(
+      `Name: ${name}\nEmail: ${email}\nPhone: ${phone}\nProject Type: ${project}\n\nMessage:\n${message}`,
+    )
+    window.location.href = `mailto:${CONTACT.email}?subject=${subject}&body=${body}`
     setSubmitted(true)
   }
 
   return (
     <section
       id="cta"
-      className="bg-gradient-to-b from-[#eef2ff]/40 to-warm-white py-16 md:py-24"
+      className="relative py-20 md:py-28"
       aria-labelledby="cta-heading"
     >
-      <div className="mx-auto max-w-3xl px-6 text-center">
-        <h2
-          id="cta-heading"
-          className="font-display text-3xl font-semibold text-navy md:text-4xl"
-        >
-          Your project deserves a better way to build.
-        </h2>
-        <p className="mt-4 text-lg text-slate">
-          Upload your space today. Get your AI plan, budget, and timeline in minutes — free.
-        </p>
+      <div className="absolute inset-0 bg-gradient-to-b from-warm-gray to-warm-white" />
 
-        <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
-          <a
-            href="#ai-demo"
-            className="animate-pulse-glow inline-flex items-center gap-2 rounded-lg bg-blue px-8 py-4 text-base font-semibold text-white transition-colors hover:bg-blue-dark"
-          >
-            Start Your Project
-            <ArrowRight className="h-5 w-5" />
-          </a>
-          <button
-            type="button"
-            onClick={() => setFormOpen(!formOpen)}
-            className="inline-flex items-center gap-2 rounded-lg border-2 border-blue px-8 py-4 text-base font-semibold text-blue transition-colors hover:bg-blue/5"
-          >
-            <Phone className="h-5 w-5" />
-            Talk to a Construction Advisor
-          </button>
-        </div>
-
-        <p className="mt-6 text-sm text-slate">
-          Free to start · No credit card · Plans generated in under 10 minutes
-        </p>
-
-        <div className="mt-8">
-          <button
-            type="button"
-            onClick={() => setFormOpen(!formOpen)}
-            className="inline-flex items-center gap-1 text-sm font-medium text-blue hover:underline"
-          >
-            Get a callback
-            <ChevronDown
-              className={`h-4 w-4 transition-transform ${formOpen ? 'rotate-180' : ''}`}
-            />
-          </button>
-
-          {formOpen && (
-            <form
-              onSubmit={handleSubmit}
-              className="mx-auto mt-6 max-w-md rounded-xl border border-mist bg-white p-6 text-left shadow-lg"
+      <div className="relative mx-auto max-w-6xl px-6">
+        <div className="grid gap-12 lg:grid-cols-2 lg:items-start">
+          <div>
+            <span className="inline-flex items-center gap-2 rounded-full bg-blue/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-widest text-blue">
+              Get In Touch
+            </span>
+            <h2
+              id="cta-heading"
+              className="font-display mt-5 text-3xl font-bold text-navy md:text-4xl lg:text-5xl"
             >
-              {submitted ? (
-                <p className="text-center font-medium text-teal">
-                  Thank you! We&apos;ll call you within 24 hours.
-                </p>
-              ) : (
-                <>
-                  <div className="space-y-4">
-                    <div>
-                      <label htmlFor="name" className="block text-sm font-medium text-slate">
-                        Name
-                      </label>
-                      <input
-                        id="name"
-                        type="text"
-                        required
-                        className="mt-1 w-full rounded-lg border border-mist px-3 py-2.5 text-sm focus:border-blue focus:outline-none focus:ring-2 focus:ring-blue/20"
-                        placeholder="Your name"
-                      />
+              Let&apos;s build something{' '}
+              <span className="text-gradient">extraordinary</span>
+            </h2>
+            <p className="mt-5 text-lg leading-relaxed text-slate">
+              Whether you&apos;re planning your dream home, a commercial space, or an institutional
+              project — reach out and we&apos;ll help you get started with AI-powered planning.
+            </p>
+
+            <div className="mt-10 space-y-5">
+              <a
+                href={`mailto:${CONTACT.email}`}
+                className="group flex items-center gap-4 rounded-2xl bg-white p-5 shadow-md shadow-navy/5 ring-1 ring-mist transition-all hover:shadow-lg"
+              >
+                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-blue to-blue-dark shadow-lg shadow-blue/30">
+                  <Mail className="h-5 w-5 text-white" />
+                </div>
+                <div>
+                  <p className="text-xs font-medium uppercase tracking-wider text-slate">Email</p>
+                  <p className="font-medium text-navy group-hover:text-blue">{CONTACT.email}</p>
+                </div>
+              </a>
+
+              <a
+                href={`tel:+91${CONTACT.phone}`}
+                className="group flex items-center gap-4 rounded-2xl bg-white p-5 shadow-md shadow-navy/5 ring-1 ring-mist transition-all hover:shadow-lg"
+              >
+                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-teal to-teal-dark shadow-lg shadow-teal/30">
+                  <Phone className="h-5 w-5 text-white" />
+                </div>
+                <div>
+                  <p className="text-xs font-medium uppercase tracking-wider text-slate">Phone</p>
+                  <p className="font-medium text-navy group-hover:text-teal">{CONTACT.phoneDisplay}</p>
+                </div>
+              </a>
+
+              <div className="flex items-center gap-4 rounded-2xl bg-white p-5 shadow-md shadow-navy/5 ring-1 ring-mist">
+                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-navy to-navy-light shadow-lg">
+                  <MapPin className="h-5 w-5 text-white" />
+                </div>
+                <div>
+                  <p className="text-xs font-medium uppercase tracking-wider text-slate">Status</p>
+                  <p className="font-medium text-navy">Launching Soon — India</p>
+                </div>
+              </div>
+            </div>
+
+            <p className="mt-8 text-sm text-slate">
+              Free to enquire · No commitment · Response within 24 hours
+            </p>
+          </div>
+
+          <div className="gradient-border rounded-3xl p-1">
+            <div className="rounded-3xl bg-white p-8 shadow-xl">
+              <div className="flex items-center justify-between">
+                <h3 className="font-display text-xl font-bold text-navy">Send an Enquiry</h3>
+                <button
+                  type="button"
+                  onClick={() => setFormOpen(!formOpen)}
+                  className="rounded-lg p-1 text-slate hover:bg-warm-gray lg:hidden"
+                  aria-label="Toggle form"
+                >
+                  <ChevronDown
+                    className={`h-5 w-5 transition-transform ${formOpen ? 'rotate-180' : ''}`}
+                  />
+                </button>
+              </div>
+
+              {(formOpen) && (
+                <form onSubmit={handleSubmit} className="mt-6 space-y-5">
+                  {submitted ? (
+                    <div className="rounded-2xl bg-teal/10 p-6 text-center">
+                      <p className="font-semibold text-teal-dark">Thank you for your enquiry!</p>
+                      <p className="mt-2 text-sm text-slate">
+                        Your email client should open shortly. If not, email us directly at{' '}
+                        <a href={`mailto:${CONTACT.email}`} className="font-medium text-blue hover:underline">
+                          {CONTACT.email}
+                        </a>
+                      </p>
                     </div>
-                    <div>
-                      <label htmlFor="phone" className="block text-sm font-medium text-slate">
-                        Phone
-                      </label>
-                      <input
-                        id="phone"
-                        type="tel"
-                        required
-                        className="mt-1 w-full rounded-lg border border-mist px-3 py-2.5 text-sm focus:border-blue focus:outline-none focus:ring-2 focus:ring-blue/20"
-                        placeholder="+91 98765 43210"
-                      />
-                    </div>
-                    <div>
-                      <label htmlFor="project" className="block text-sm font-medium text-slate">
-                        Project Type
-                      </label>
-                      <select
-                        id="project"
-                        className="mt-1 w-full rounded-lg border border-mist px-3 py-2.5 text-sm focus:border-blue focus:outline-none focus:ring-2 focus:ring-blue/20"
+                  ) : (
+                    <>
+                      <div>
+                        <label htmlFor="name" className="block text-sm font-semibold text-navy">
+                          Full Name *
+                        </label>
+                        <input
+                          id="name"
+                          name="name"
+                          type="text"
+                          required
+                          className="mt-2 w-full rounded-xl border border-mist bg-warm-gray/50 px-4 py-3 text-sm transition-all focus:border-blue focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue/20"
+                          placeholder="Your full name"
+                        />
+                      </div>
+
+                      <div className="grid gap-5 sm:grid-cols-2">
+                        <div>
+                          <label htmlFor="email" className="block text-sm font-semibold text-navy">
+                            Email *
+                          </label>
+                          <input
+                            id="email"
+                            name="email"
+                            type="email"
+                            required
+                            className="mt-2 w-full rounded-xl border border-mist bg-warm-gray/50 px-4 py-3 text-sm transition-all focus:border-blue focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue/20"
+                            placeholder="you@email.com"
+                          />
+                        </div>
+                        <div>
+                          <label htmlFor="phone" className="block text-sm font-semibold text-navy">
+                            Phone *
+                          </label>
+                          <input
+                            id="phone"
+                            name="phone"
+                            type="tel"
+                            required
+                            className="mt-2 w-full rounded-xl border border-mist bg-warm-gray/50 px-4 py-3 text-sm transition-all focus:border-blue focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue/20"
+                            placeholder="+91 98765 43210"
+                          />
+                        </div>
+                      </div>
+
+                      <div>
+                        <label htmlFor="project" className="block text-sm font-semibold text-navy">
+                          Project Type
+                        </label>
+                        <select
+                          id="project"
+                          name="project"
+                          className="mt-2 w-full rounded-xl border border-mist bg-warm-gray/50 px-4 py-3 text-sm transition-all focus:border-blue focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue/20"
+                        >
+                          <option>Residential Home</option>
+                          <option>Room Addition</option>
+                          <option>Commercial Building</option>
+                          <option>School / Institution</option>
+                          <option>Apartment Complex</option>
+                          <option>Other</option>
+                        </select>
+                      </div>
+
+                      <div>
+                        <label htmlFor="message" className="block text-sm font-semibold text-navy">
+                          Tell us about your project
+                        </label>
+                        <textarea
+                          id="message"
+                          name="message"
+                          rows={3}
+                          className="mt-2 w-full resize-none rounded-xl border border-mist bg-warm-gray/50 px-4 py-3 text-sm transition-all focus:border-blue focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue/20"
+                          placeholder="Plot size, location, budget range, timeline..."
+                        />
+                      </div>
+
+                      <button
+                        type="submit"
+                        className="btn-glow btn-primary flex w-full items-center justify-center gap-2 rounded-xl py-4 text-sm font-semibold text-white"
                       >
-                        <option>Residential Home</option>
-                        <option>Room Addition</option>
-                        <option>Commercial Building</option>
-                        <option>School / Institution</option>
-                        <option>Other</option>
-                      </select>
-                    </div>
-                  </div>
-                  <button
-                    type="submit"
-                    className="mt-6 w-full rounded-lg bg-blue py-3 text-sm font-semibold text-white hover:bg-blue-dark"
-                  >
-                    Request Callback
-                  </button>
-                </>
+                        <Send className="h-4 w-4" />
+                        Send Enquiry
+                      </button>
+                    </>
+                  )}
+                </form>
               )}
-            </form>
-          )}
+            </div>
+          </div>
         </div>
       </div>
     </section>

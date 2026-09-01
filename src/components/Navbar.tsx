@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react'
-import { Check, Menu, X } from 'lucide-react'
+import { Building2, Menu, X } from 'lucide-react'
 
 const navLinks = [
   { label: 'How It Works', href: '#how-it-works' },
   { label: 'Features', href: '#features' },
   { label: 'AI Demo', href: '#ai-demo' },
-  { label: 'Testimonials', href: '#trust' },
+  { label: 'Why Us', href: '#trust' },
 ]
 
 export default function Navbar() {
@@ -13,70 +13,76 @@ export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false)
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 80)
+    const onScroll = () => setScrolled(window.scrollY > 60)
+    window.scrollY > 60 && setScrolled(true)
     window.addEventListener('scroll', onScroll)
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
   return (
     <header
-      className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 ${
-        scrolled ? 'bg-white shadow-md' : 'bg-transparent'
+      className={`fixed inset-x-0 top-[42px] z-50 transition-all duration-500 ${
+        scrolled
+          ? 'glass-light shadow-lg shadow-navy/5'
+          : 'bg-transparent'
       }`}
     >
       <nav
         className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4"
         aria-label="Main navigation"
       >
-        <a href="#" className="flex items-center gap-2">
-          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-navy">
-            <Check className="h-5 w-5 text-teal" strokeWidth={3} />
+        <a href="#" className="group flex items-center gap-3">
+          <div className="relative flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-blue to-teal shadow-lg shadow-blue/30 transition-transform group-hover:scale-105">
+            <Building2 className="h-5 w-5 text-white" strokeWidth={2.5} />
+            <div className="absolute inset-0 rounded-xl bg-white/20 opacity-0 transition-opacity group-hover:opacity-100" />
           </div>
-          <span className="font-display text-xl font-bold text-navy">BuildFlow</span>
+          <div>
+            <span className="font-display text-xl font-bold text-navy">BuildFlow</span>
+            <span className="block text-[10px] font-medium uppercase tracking-widest text-teal">
+              AI Construction
+            </span>
+          </div>
         </a>
 
-        <div className="hidden items-center gap-8 md:flex">
+        <div className="hidden items-center gap-1 md:flex">
           {navLinks.map((link) => (
             <a
               key={link.href}
               href={link.href}
-              className="text-sm font-medium text-slate transition-colors hover:text-blue"
+              className="rounded-lg px-4 py-2 text-sm font-medium text-slate transition-all hover:bg-blue/5 hover:text-blue"
             >
               {link.label}
             </a>
           ))}
         </div>
 
-        <div className="hidden items-center gap-4 md:flex">
-          <a href="#cta" className="text-sm font-medium text-slate hover:text-blue">
-            Sign In
-          </a>
+        <div className="hidden items-center gap-3 md:flex">
           <a
             href="#cta"
-            className="rounded-lg bg-blue px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-blue-dark"
+            className="btn-glow btn-primary rounded-xl px-6 py-2.5 text-sm font-semibold text-white"
           >
-            Start Your Project
+            Enquire Now
           </a>
         </div>
 
         <button
           type="button"
-          className="rounded-lg p-2 text-navy md:hidden"
+          className="rounded-xl p-2.5 text-navy ring-1 ring-mist md:hidden"
           onClick={() => setMobileOpen(!mobileOpen)}
           aria-label={mobileOpen ? 'Close menu' : 'Open menu'}
           aria-expanded={mobileOpen}
         >
-          {mobileOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+          {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
         </button>
       </nav>
 
       {mobileOpen && (
-        <div className="border-t border-mist bg-white px-6 py-4 md:hidden">
+        <div className="border-t border-mist/50 bg-white/95 px-6 py-4 backdrop-blur-xl md:hidden">
           {navLinks.map((link) => (
             <a
               key={link.href}
               href={link.href}
-              className="block py-3 text-sm font-medium text-slate"
+              className="block rounded-lg py-3 text-sm font-medium text-slate hover:text-blue"
               onClick={() => setMobileOpen(false)}
             >
               {link.label}
@@ -84,10 +90,10 @@ export default function Navbar() {
           ))}
           <a
             href="#cta"
-            className="mt-2 block w-full rounded-lg bg-blue py-3 text-center text-sm font-semibold text-white"
+            className="btn-primary mt-3 block w-full rounded-xl py-3.5 text-center text-sm font-semibold text-white"
             onClick={() => setMobileOpen(false)}
           >
-            Start Your Project
+            Enquire Now
           </a>
         </div>
       )}

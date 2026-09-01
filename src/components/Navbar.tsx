@@ -21,7 +21,9 @@ export default function Navbar() {
   return (
     <header
       className={`fixed inset-x-0 top-[42px] z-50 transition-all duration-500 ${
-        scrolled ? 'glass-light shadow-md' : 'bg-transparent'
+        scrolled
+          ? 'glass-light shadow-lg'
+          : 'bg-transparent'
       }`}
     >
       <nav
@@ -29,12 +31,22 @@ export default function Navbar() {
         aria-label="Main navigation"
       >
         <a href="#" className="group flex items-center gap-3">
-          <div className="relative flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-terracotta to-brick shadow-lg shadow-terracotta/30 transition-transform group-hover:scale-105">
+          <div className="relative flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-wood to-gold shadow-lg shadow-black/30 transition-transform group-hover:scale-105">
             <Home className="h-5 w-5 text-white" strokeWidth={2.5} />
           </div>
           <div>
-            <span className="font-display text-xl font-bold text-navy">BuildFlow</span>
-            <span className="block text-[10px] font-semibold uppercase tracking-widest text-terracotta">
+            <span
+              className={`font-display text-xl font-bold transition-colors ${
+                scrolled ? 'text-navy' : 'text-white'
+              }`}
+            >
+              BuildFlow
+            </span>
+            <span
+              className={`block text-[10px] font-semibold uppercase tracking-widest transition-colors ${
+                scrolled ? 'text-wood' : 'text-gold'
+              }`}
+            >
               Home Builders
             </span>
           </div>
@@ -45,7 +57,11 @@ export default function Navbar() {
             <a
               key={link.href}
               href={link.href}
-              className="rounded-lg px-4 py-2 text-sm font-medium text-slate transition-all hover:bg-terracotta/5 hover:text-terracotta"
+              className={`rounded-lg px-4 py-2 text-sm font-medium transition-all ${
+                scrolled
+                  ? 'text-slate hover:bg-wood/5 hover:text-wood'
+                  : 'text-white/80 hover:bg-white/10 hover:text-white'
+              }`}
             >
               {link.label}
             </a>
@@ -63,7 +79,9 @@ export default function Navbar() {
 
         <button
           type="button"
-          className="rounded-xl p-2.5 text-navy ring-1 ring-mist md:hidden"
+          className={`rounded-xl p-2.5 ring-1 md:hidden ${
+            scrolled ? 'text-navy ring-mist' : 'text-white ring-white/20'
+          }`}
           onClick={() => setMobileOpen(!mobileOpen)}
           aria-label={mobileOpen ? 'Close menu' : 'Open menu'}
           aria-expanded={mobileOpen}
@@ -78,7 +96,7 @@ export default function Navbar() {
             <a
               key={link.href}
               href={link.href}
-              className="block rounded-lg py-3 text-sm font-medium text-slate hover:text-terracotta"
+              className="block rounded-lg py-3 text-sm font-medium text-slate hover:text-wood"
               onClick={() => setMobileOpen(false)}
             >
               {link.label}

@@ -57,6 +57,7 @@ export interface AIFullPlanPayload {
   plotWidth: number
   projectType: string
   city?: string
+  description?: string
 }
 
 export interface AIFullPlanResult {

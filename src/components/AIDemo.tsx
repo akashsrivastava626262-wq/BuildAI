@@ -4,6 +4,9 @@ import { ApiError, generateFullPlan, type AIFullPlanResult } from '../lib/api'
 
 type Phase = 'idle' | 'processing' | 'complete' | 'error'
 
+const SQFT_PER_SQM = 10.7639
+const FEET_PER_METER = 3.28084
+
 const steps = [
   'Analyzing plot dimensions & topography...',
   'Generating optimized floor plan...',
@@ -13,28 +16,53 @@ const steps = [
   'Generating project timeline...',
 ]
 
-const projectTypeMap: Record<string, string> = {
-  '3BHK Residential Villa': 'RESIDENTIAL',
-  '2BHK Apartment': 'RESIDENTIAL',
-  'Commercial Space': 'COMMERCIAL',
+export const PROJECT_TYPE_OPTIONS = [
+  { label: '1 BHK', apiType: 'RESIDENTIAL' },
+  { label: '2 BHK', apiType: 'RESIDENTIAL' },
+  { label: '3 BHK', apiType: 'RESIDENTIAL' },
+  { label: '4 BHK', apiType: 'RESIDENTIAL' },
+  { label: 'Plot / Land', apiType: 'LAND' },
+  { label: 'Single Room', apiType: 'RESIDENTIAL' },
+  { label: 'Land to Apartment', apiType: 'LAND_TO_APARTMENT', requiresApartmentCount: true },
+] as const
+
+function sqftToMeters(value: number) {
+  return value / FEET_PER_METER
 }
 
 export default function AIDemo() {
   const [phase, setPhase] = useState<Phase>('idle')
   const [stepIdx, setStepIdx] = useState(0)
-  const [dims, setDims] = useState({ l: '12', w: '10' })
-  const [projectType, setProjectType] = useState('3BHK Residential Villa')
+  const [dims, setDims] = useState({ length: '40', breadth: '30' })
+  const [projectType, setProjectType] = useState<string>(PROJECT_TYPE_OPTIONS[2].label)
+  const [apartmentCount, setApartmentCount] = useState('4')
   const [result, setResult] = useState<AIFullPlanResult | null>(null)
   const [error, setError] = useState('')
 
-  const run = async () => {
-    const plotLength = Number(dims.l)
-    const plotWidth = Number(dims.w)
+  const selectedOption = PROJECT_TYPE_OPTIONS.find((option) => option.label === projectType)
+  const showApartmentCount =
+    selectedOption !== undefined &&
+    'requiresApartmentCount' in selectedOption &&
+    selectedOption.requiresApartmentCount === true
+  const plotAreaSqFt = Number(dims.length) * Number(dims.breadth)
 
-    if (!plotLength || !plotWidth || plotLength <= 0 || plotWidth <= 0) {
-      setError('Please enter valid plot dimensions.')
+  const run = async () => {
+    const lengthSqFt = Number(dims.length)
+    const breadthSqFt = Number(dims.breadth)
+
+    if (!lengthSqFt || !breadthSqFt || lengthSqFt <= 0 || breadthSqFt <= 0) {
+      setError('Please enter valid length and breadth in square feet.')
       setPhase('error')
       return
+    }
+
+    if (showApartmentCount) {
+      const units = Number(apartmentCount)
+      if (!units || units <= 0 || !Number.isInteger(units)) {
+        setError('Please enter how many apartments can be built on this land.')
+        setPhase('error')
+        return
+      }
     }
 
     setPhase('processing')
@@ -46,11 +74,16 @@ export default function AIDemo() {
       setStepIdx((prev) => Math.min(prev + 1, steps.length - 1))
     }, 500)
 
+    const description = showApartmentCount
+      ? `${projectType} — ${apartmentCount} apartments on ${plotAreaSqFt.toLocaleString('en-IN')} sq.ft plot`
+      : `${projectType} — ${plotAreaSqFt.toLocaleString('en-IN')} sq.ft plot`
+
     try {
       const response = await generateFullPlan({
-        plotLength,
-        plotWidth,
-        projectType: projectTypeMap[projectType] ?? 'RESIDENTIAL',
+        plotLength: sqftToMeters(lengthSqFt),
+        plotWidth: sqftToMeters(breadthSqFt),
+        projectType: selectedOption?.apiType ?? 'RESIDENTIAL',
+        description,
       })
 
       clearInterval(interval)
@@ -75,7 +108,14 @@ export default function AIDemo() {
     setError('')
   }
 
-  const budget = result?.budget.totalEstimate ?? Number(dims.l) * Number(dims.w) * 28000
+  const costPerSqFt =
+    selectedOption?.apiType === 'LAND_TO_APARTMENT'
+      ? 4200
+      : selectedOption?.apiType === 'LAND'
+        ? 1800
+        : 2800
+  const budget =
+    result?.budget.totalEstimate ?? Math.round(plotAreaSqFt * costPerSqFt)
   const timeline = result?.timeline.totalWeeks ?? 16
 
   return (
@@ -90,8 +130,8 @@ export default function AIDemo() {
             Experience the <span className="text-gradient-accent">AI engine</span>
           </h2>
           <p className="mt-4 text-white/50">
-            Enter your plot dimensions and watch BuildFlow generate a complete construction
-            intelligence package in real time.
+            Select your project type, enter plot dimensions in square feet, and watch BuildFlow
+            generate a complete construction intelligence package in real time.
           </p>
         </div>
 
@@ -115,33 +155,69 @@ export default function AIDemo() {
                     disabled={phase === 'processing'}
                     className="mt-2 w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white focus:border-accent/50 focus:outline-none disabled:opacity-50"
                   >
-                    <option>3BHK Residential Villa</option>
-                    <option>2BHK Apartment</option>
-                    <option>Commercial Space</option>
+                    {PROJECT_TYPE_OPTIONS.map((option) => (
+                      <option key={option.label} value={option.label}>
+                        {option.label}
+                      </option>
+                    ))}
                   </select>
                 </div>
-                <div className="grid grid-cols-2 gap-3">
+
+                {showApartmentCount && (
                   <div>
-                    <label className="text-xs text-white/40">Length (m)</label>
+                    <label className="text-xs text-white/40">
+                      How many apartments can be built?
+                    </label>
                     <input
                       type="number"
-                      value={dims.l}
-                      onChange={(e) => setDims({ ...dims, l: e.target.value })}
+                      min={1}
+                      step={1}
+                      value={apartmentCount}
+                      onChange={(e) => setApartmentCount(e.target.value)}
                       disabled={phase === 'processing'}
-                      className="mt-2 w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 font-mono text-sm text-white focus:border-accent/50 focus:outline-none disabled:opacity-50"
+                      placeholder="e.g. 8"
+                      className="mt-2 w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 font-mono text-sm text-white placeholder:text-white/30 focus:border-accent/50 focus:outline-none disabled:opacity-50"
+                    />
+                  </div>
+                )}
+
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="text-xs text-white/40">Length (sq.ft)</label>
+                    <input
+                      type="number"
+                      min={1}
+                      value={dims.length}
+                      onChange={(e) => setDims({ ...dims, length: e.target.value })}
+                      disabled={phase === 'processing'}
+                      placeholder="e.g. 40"
+                      className="mt-2 w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 font-mono text-sm text-white placeholder:text-white/30 focus:border-accent/50 focus:outline-none disabled:opacity-50"
                     />
                   </div>
                   <div>
-                    <label className="text-xs text-white/40">Width (m)</label>
+                    <label className="text-xs text-white/40">Breadth (sq.ft)</label>
                     <input
                       type="number"
-                      value={dims.w}
-                      onChange={(e) => setDims({ ...dims, w: e.target.value })}
+                      min={1}
+                      value={dims.breadth}
+                      onChange={(e) => setDims({ ...dims, breadth: e.target.value })}
                       disabled={phase === 'processing'}
-                      className="mt-2 w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 font-mono text-sm text-white focus:border-accent/50 focus:outline-none disabled:opacity-50"
+                      placeholder="e.g. 30"
+                      className="mt-2 w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 font-mono text-sm text-white placeholder:text-white/30 focus:border-accent/50 focus:outline-none disabled:opacity-50"
                     />
                   </div>
                 </div>
+
+                {Number(dims.length) > 0 && Number(dims.breadth) > 0 && (
+                  <p className="text-xs text-white/35">
+                    Total plot area:{' '}
+                    <span className="font-mono text-white/55">
+                      {plotAreaSqFt.toLocaleString('en-IN')} sq.ft
+                    </span>{' '}
+                    ({(plotAreaSqFt / SQFT_PER_SQM).toFixed(1)} sq.m)
+                  </p>
+                )}
+
                 {phase === 'idle' && (
                   <button
                     type="button"
@@ -205,6 +281,11 @@ export default function AIDemo() {
                 <div className="mt-6 space-y-4 animate-fade-in">
                   <div className="rounded-xl border border-white/10 bg-white/5 p-4">
                     <p className="text-xs text-white/40">Floor Plan Generated</p>
+                    <p className="mt-1 text-xs text-white/30">
+                      {projectType}
+                      {showApartmentCount ? ` · ${apartmentCount} apartments` : ''} ·{' '}
+                      {plotAreaSqFt.toLocaleString('en-IN')} sq.ft
+                    </p>
                     <div
                       className="mt-3 w-full [&_svg]:w-full"
                       dangerouslySetInnerHTML={{ __html: result.floorPlan.svgLayout }}

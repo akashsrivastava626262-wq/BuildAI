@@ -8,7 +8,7 @@ on:
       api_url:
         description: Backend API URL (no trailing slash)
         required: false
-        default: https://controversial-garage-rocky-lite.trycloudflare.com
+        default: https://engagement-gains-nobody-sold.trycloudflare.com
 
 permissions:
   contents: write
@@ -23,7 +23,7 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     env:
-      VITE_API_URL: ${{ github.event.inputs.api_url || vars.VITE_API_URL || 'https://controversial-garage-rocky-lite.trycloudflare.com' }}
+      VITE_API_URL: ${{ github.event.inputs.api_url || vars.VITE_API_URL || 'https://engagement-gains-nobody-sold.trycloudflare.com' }}
     steps:
       - uses: actions/checkout@v4
 

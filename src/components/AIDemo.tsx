@@ -227,7 +227,7 @@ export default function AIDemo() {
       setError(
         err instanceof ApiError
           ? err.message
-          : 'Unable to reach the estimation engine. Please try again.',
+          : 'Unable to reach the estimation engine. The backend server may be offline — please try again in a few minutes or contact us via Book a Demo.',
       )
       setPhase('error')
     }

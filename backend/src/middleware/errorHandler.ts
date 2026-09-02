@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express'
 import { ZodError } from 'zod'
 import { AppError } from '../utils/errors.js'
+import { MissingInputsError } from '../utils/missingInputs.js'
 import { config } from '../config/index.js'
 
 export function errorHandler(
@@ -30,6 +31,18 @@ export function errorHandler(
           field: e.path.join('.'),
           message: e.message,
         })),
+      },
+    })
+    return
+  }
+
+  if (err instanceof MissingInputsError) {
+    res.status(422).json({
+      success: false,
+      error: {
+        code: 'MISSING_INPUTS',
+        message: err.message,
+        missingFields: err.missingFields,
       },
     })
     return

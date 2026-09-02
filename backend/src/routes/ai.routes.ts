@@ -17,6 +17,10 @@ const publicAiLimiter = rateLimit({
   message: { success: false, error: { code: 'RATE_LIMIT', message: 'Too many AI requests. Try again later.' } },
 })
 
+router.get('/public/required-fields', (_req: Request, res: Response) => {
+  res.json({ success: true, data: aiService.getRequiredFieldsDocumentation() })
+})
+
 // Public demo endpoint for the landing page — no auth required
 router.post(
   '/public/full-plan',

@@ -5,6 +5,7 @@ import {
   type ConstructionEstimateInput,
   type ConstructionEstimateResult,
 } from './construction-estimator.service.js'
+import { fillDemoDefaults, validateDemoInputs } from './demo-defaults.js'
 
 const FEET_PER_METER = 3.28084
 
@@ -181,8 +182,15 @@ function estimateToBudget(estimate: ConstructionEstimateResult): AIBudgetResult 
 export async function generateBudget(
   input: FloorPlanInput & Record<string, unknown>,
 ): Promise<AIBudgetResult> {
-  const estimateInput = toEstimateInput(input)
-  const estimate = calculateConstructionEstimate(estimateInput)
+  const payload = {
+    ...input,
+    projectLabel: (input.projectLabel as string) ?? (input.description as string),
+  }
+  validateDemoInputs(payload as Partial<ConstructionEstimateInput> & { projectLabel?: string })
+  const { filled, assumptions } = fillDemoDefaults(
+    payload as Partial<ConstructionEstimateInput> & { projectLabel?: string; apartmentCount?: number },
+  )
+  const estimate = calculateConstructionEstimate(filled, { demoAssumptions: assumptions })
   return estimateToBudget(estimate)
 }
 

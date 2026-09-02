@@ -87,8 +87,9 @@ export interface ConstructionEstimateResult {
     totalCum: number
   }
   methodology: string[]
+  demoAssumptions?: string[]
   generatedAt: string
-  source: 'engineering_formulas'
+  source: 'engineering_formulas' | 'demo_formulas'
 }
 
 function round2(n: number) {
@@ -109,30 +110,10 @@ export function getRequiredFieldsDocumentation(): Array<{
   return [
     { field: 'plotLengthFt', label: 'Plot length', unit: 'ft', required: true },
     { field: 'plotBreadthFt', label: 'Plot breadth', unit: 'ft', required: true },
-    { field: 'builtUpAreaPerFloorSqFt', label: 'Built-up area per floor', unit: 'sq.ft', required: true },
-    { field: 'numberOfFloors', label: 'Number of floors', unit: 'count', required: true },
-    { field: 'floorHeightFt', label: 'Floor-to-floor height', unit: 'ft', required: true },
-    { field: 'foundationType', label: 'Foundation type', unit: 'isolated_footing | strip_footing | raft', required: true },
-    { field: 'foundationDepthFt', label: 'Foundation depth', unit: 'ft', required: true },
-    { field: 'footingLengthFt', label: 'Footing length', unit: 'ft', required: false, condition: 'Required for isolated footing' },
-    { field: 'footingWidthFt', label: 'Footing width', unit: 'ft', required: false, condition: 'Required for isolated footing' },
-    { field: 'columnCount', label: 'Number of columns', unit: 'count', required: false, condition: 'Required for isolated footing' },
-    { field: 'columnSizeInches', label: 'Column size (square)', unit: 'inches', required: false, condition: 'Required for isolated footing and columns' },
-    { field: 'stripFootingWidthFt', label: 'Strip footing width', unit: 'ft', required: false, condition: 'Required for strip footing' },
-    { field: 'raftThicknessMm', label: 'Raft slab thickness', unit: 'mm', required: false, condition: 'Required for raft foundation' },
-    { field: 'slabThicknessMm', label: 'RCC slab thickness', unit: 'mm', required: true },
-    { field: 'beamLengthPerFloorFt', label: 'Total beam length per floor', unit: 'ft', required: true },
-    { field: 'beamWidthInches', label: 'Beam width', unit: 'inches', required: true },
-    { field: 'beamDepthInches', label: 'Beam depth', unit: 'inches', required: true },
-    { field: 'totalMasonryWallAreaSqFt', label: 'Total masonry wall area (one face)', unit: 'sq.ft', required: true },
-    { field: 'wallThicknessInches', label: 'Wall thickness', unit: '4.5 or 9 inches', required: true },
-    { field: 'plasterThicknessMm', label: 'Plaster thickness', unit: 'mm', required: true },
-    { field: 'concreteGradeFoundation', label: 'Foundation concrete grade', unit: 'M20 | M25', required: true },
-    { field: 'concreteGradeStructure', label: 'Structure concrete grade', unit: 'M20 | M25', required: true },
-    { field: 'numberOfBathrooms', label: 'Number of bathrooms', unit: 'count', required: true },
-    { field: 'finishingLevel', label: 'Finishing level', unit: 'basic | standard | premium', required: true },
     { field: 'city', label: 'City / location', unit: 'text', required: true },
-    { field: 'pccThicknessMm', label: 'PCC thickness under foundation', unit: 'mm', required: false },
+    { field: 'projectLabel', label: 'Project type (e.g. 1 BHK)', unit: 'text', required: false },
+    { field: 'numberOfFloors', label: 'Number of floors', unit: 'count', required: false, condition: 'Defaults to 1 in demo mode' },
+    { field: 'builtUpAreaPerFloorSqFt', label: 'Built-up area per floor', unit: 'sq.ft', required: false, condition: 'Approximated from project type if omitted' },
   ]
 }
 
@@ -206,6 +187,7 @@ function addLine(
 
 export function calculateConstructionEstimate(
   input: ConstructionEstimateInput,
+  options?: { demoAssumptions?: string[] },
 ): ConstructionEstimateResult {
   validateConstructionInputs(input)
 
@@ -524,7 +506,8 @@ export function calculateConstructionEstimate(
       totalCum: round2(totalConcreteCum),
     },
     methodology,
+    demoAssumptions: options?.demoAssumptions,
     generatedAt: new Date().toISOString(),
-    source: 'engineering_formulas',
+    source: options?.demoAssumptions ? 'demo_formulas' : 'engineering_formulas',
   }
 }

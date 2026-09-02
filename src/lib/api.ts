@@ -92,9 +92,8 @@ export type ConstructionEstimatePayload = {
   numberOfBathrooms?: number
   finishingLevel?: 'basic' | 'standard' | 'premium'
   city?: string
-  pccThicknessMm?: number
+  projectLabel?: string
   projectType?: string
-  description?: string
   apartmentCount?: number
 }
 
@@ -136,6 +135,7 @@ export interface AIFullPlanResult {
         costPerSqFt: number
       }
       methodology: string[]
+      demoAssumptions?: string[]
       cityTier: string
       city: string
     }

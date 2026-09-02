@@ -93,6 +93,7 @@ export const constructionEstimateSchema = z.object({
   city: z.string().min(2).optional(),
   pccThicknessMm: z.number().positive().optional(),
   projectType: z.string().optional(),
+  projectLabel: z.string().optional(),
   description: z.string().optional(),
   apartmentCount: z.number().int().positive().optional(),
 })

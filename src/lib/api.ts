@@ -45,6 +45,7 @@ export interface EnquiryPayload {
 export interface EnquiryResponse {
   success: boolean
   message: string
+  emailSent?: boolean
   data: {
     id: string
     name: string
@@ -91,6 +92,26 @@ export function submitEnquiry(payload: EnquiryPayload) {
 
 export function generateFullPlan(payload: AIFullPlanPayload) {
   return request<AIFullPlanResponse>('/api/ai/public/full-plan', {
+    method: 'POST',
+    body: JSON.stringify(payload),
+  })
+}
+
+export interface EmailReportPayload extends AIFullPlanPayload {
+  email: string
+  name?: string
+  projectLabel?: string
+  plotAreaSqFt?: number
+  apartmentCount?: number
+}
+
+export interface EmailReportResponse {
+  success: boolean
+  message: string
+}
+
+export function emailAIReport(payload: EmailReportPayload) {
+  return request<EmailReportResponse>('/api/ai/public/email-report', {
     method: 'POST',
     body: JSON.stringify(payload),
   })

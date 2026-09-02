@@ -1,6 +1,6 @@
 import { useState } from 'react'
-import { AlertCircle, Loader2, Sparkles } from 'lucide-react'
-import { ApiError, generateFullPlan, type AIFullPlanResult } from '../lib/api'
+import { AlertCircle, Loader2, Mail, Sparkles } from 'lucide-react'
+import { ApiError, emailAIReport, generateFullPlan, type AIFullPlanResult } from '../lib/api'
 
 type Phase = 'idle' | 'processing' | 'complete' | 'error'
 
@@ -38,6 +38,10 @@ export default function AIDemo() {
   const [apartmentCount, setApartmentCount] = useState('4')
   const [result, setResult] = useState<AIFullPlanResult | null>(null)
   const [error, setError] = useState('')
+  const [reportEmail, setReportEmail] = useState('')
+  const [reportName, setReportName] = useState('')
+  const [emailStatus, setEmailStatus] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle')
+  const [emailError, setEmailError] = useState('')
 
   const selectedOption = PROJECT_TYPE_OPTIONS.find((option) => option.label === projectType)
   const showApartmentCount =
@@ -106,6 +110,47 @@ export default function AIDemo() {
     setStepIdx(0)
     setResult(null)
     setError('')
+    setEmailStatus('idle')
+    setEmailError('')
+  }
+
+  const sendReport = async () => {
+    const lengthSqFt = Number(dims.length)
+    const breadthSqFt = Number(dims.breadth)
+
+    if (!reportEmail || !reportName.trim()) {
+      setEmailError('Please enter your name and email to receive the report.')
+      setEmailStatus('error')
+      return
+    }
+
+    setEmailStatus('sending')
+    setEmailError('')
+
+    try {
+      const response = await emailAIReport({
+        email: reportEmail,
+        name: reportName,
+        plotLength: sqftToMeters(lengthSqFt),
+        plotWidth: sqftToMeters(breadthSqFt),
+        projectType: selectedOption?.apiType ?? 'RESIDENTIAL',
+        description: showApartmentCount
+          ? `${projectType} — ${apartmentCount} apartments on ${plotAreaSqFt.toLocaleString('en-IN')} sq.ft plot`
+          : `${projectType} — ${plotAreaSqFt.toLocaleString('en-IN')} sq.ft plot`,
+        projectLabel: projectType,
+        plotAreaSqFt,
+        apartmentCount: showApartmentCount ? Number(apartmentCount) : undefined,
+      })
+      setEmailStatus('sent')
+      if (response.message) setEmailError('')
+    } catch (err) {
+      setEmailStatus('error')
+      setEmailError(
+        err instanceof ApiError
+          ? err.message
+          : 'Could not send the report by email. Please use Book a Demo below.',
+      )
+    }
   }
 
   const costPerSqFt =
@@ -305,8 +350,57 @@ export default function AIDemo() {
                       </p>
                     </div>
                   </div>
-                  <a href="#cta" className="btn-accent block rounded-xl py-3 text-center text-sm">
-                    Get Full Report →
+                  <div className="rounded-xl border border-white/10 bg-white/5 p-4">
+                    <p className="text-xs font-medium text-white/50">Email full report</p>
+                    <p className="mt-1 text-xs text-white/30">
+                      Enter your details and we&apos;ll send the complete AI report to your inbox.
+                    </p>
+                    {emailStatus === 'sent' ? (
+                      <p className="mt-4 rounded-xl bg-accent/10 p-4 text-sm text-accent-bright">
+                        Report sent to {reportEmail}. Please check your inbox and spam folder.
+                      </p>
+                    ) : (
+                      <div className="mt-4 space-y-3">
+                        <input
+                          type="text"
+                          value={reportName}
+                          onChange={(e) => setReportName(e.target.value)}
+                          placeholder="Your name"
+                          className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white placeholder:text-white/30 focus:border-accent/50 focus:outline-none"
+                        />
+                        <input
+                          type="email"
+                          value={reportEmail}
+                          onChange={(e) => setReportEmail(e.target.value)}
+                          placeholder="Your email"
+                          className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white placeholder:text-white/30 focus:border-accent/50 focus:outline-none"
+                        />
+                        {emailStatus === 'error' && emailError && (
+                          <p className="text-xs text-red-300">{emailError}</p>
+                        )}
+                        <button
+                          type="button"
+                          onClick={sendReport}
+                          disabled={emailStatus === 'sending'}
+                          className="btn-accent flex w-full items-center justify-center gap-2 rounded-xl py-3 text-sm disabled:opacity-60"
+                        >
+                          {emailStatus === 'sending' ? (
+                            <>
+                              <Loader2 className="h-4 w-4 animate-spin" />
+                              Sending report...
+                            </>
+                          ) : (
+                            <>
+                              <Mail className="h-4 w-4" />
+                              Email Full Report
+                            </>
+                          )}
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                  <a href="#cta" className="btn-secondary block rounded-xl py-3 text-center text-sm">
+                    Book a Personal Demo →
                   </a>
                 </div>
               )}

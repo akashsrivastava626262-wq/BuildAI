@@ -73,6 +73,14 @@ export const aiGenerateSchema = z.object({
   city: z.string().optional(),
 })
 
+export const emailReportSchema = aiGenerateSchema.extend({
+  email: z.string().email(),
+  name: z.string().min(2).optional(),
+  projectLabel: z.string().optional(),
+  plotAreaSqFt: z.number().positive().optional(),
+  apartmentCount: z.number().int().positive().optional(),
+})
+
 export const idParamSchema = z.object({
   id: z.string().min(1),
 })

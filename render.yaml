@@ -25,6 +25,18 @@ services:
         value: https://buildflow-api.onrender.com
       - key: ADMIN_EMAIL
         value: akashsrivastava626262@gmail.com
+      - key: SMTP_HOST
+        value: smtp.gmail.com
+      - key: SMTP_PORT
+        value: 587
+      - key: SMTP_SECURE
+        value: false
+      - key: SMTP_USER
+        sync: false
+      - key: SMTP_PASS
+        sync: false
+      - key: EMAIL_FROM
+        value: BuildFlow <akashsrivastava626262@gmail.com>
 
 databases:
   - name: buildflow-db

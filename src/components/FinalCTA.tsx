@@ -7,6 +7,7 @@ export default function FinalCTA() {
   const [submitted, setSubmitted] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+  const [successMessage, setSuccessMessage] = useState('')
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -25,10 +26,11 @@ export default function FinalCTA() {
         message: String(data.get('message') ?? '') || undefined,
       })
       setSubmitted(true)
+      setSuccessMessage(
+        response.message ||
+          'Your demo request has been submitted. We will contact you within 24 hours.',
+      )
       form.reset()
-      if (response.message) {
-        // message available for future UI use
-      }
     } catch (err) {
       const message =
         err instanceof ApiError
@@ -94,8 +96,7 @@ export default function FinalCTA() {
               <div className="mt-8 rounded-2xl bg-accent/10 p-6 text-center">
                 <p className="font-medium text-accent-bright">Thank you!</p>
                 <p className="mt-2 text-sm text-white/50">
-                  Your demo request has been submitted. We&apos;ll contact you at the email you
-                  provided within 24 hours.
+                  {successMessage}
                 </p>
               </div>
             ) : (

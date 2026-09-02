@@ -4,6 +4,11 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
+    inputs:
+      api_url:
+        description: Backend API URL (no trailing slash)
+        required: false
+        default: https://controversial-garage-rocky-lite.trycloudflare.com
 
 permissions:
   contents: write
@@ -17,6 +22,8 @@ concurrency:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    env:
+      VITE_API_URL: ${{ github.event.inputs.api_url || vars.VITE_API_URL || 'https://controversial-garage-rocky-lite.trycloudflare.com' }}
     steps:
       - uses: actions/checkout@v4
 
@@ -28,7 +35,7 @@ jobs:
       - run: npm ci
       - run: npm run build
         env:
-          VITE_API_URL: https://pursuant-assure-scoop-ottawa.trycloudflare.com
+          VITE_API_URL: ${{ env.VITE_API_URL }}
 
       - name: Deploy to gh-pages branch
         uses: peaceiris/actions-gh-pages@v4

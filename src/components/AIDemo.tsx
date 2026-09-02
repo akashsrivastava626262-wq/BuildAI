@@ -95,7 +95,7 @@ export default function AIDemo() {
       const message =
         err instanceof ApiError
           ? err.message
-          : 'Unable to reach the AI engine. Please try again.'
+          : 'Unable to reach the AI engine. The server may be starting up — please try again in a minute.'
       setError(message)
       setPhase('error')
     }

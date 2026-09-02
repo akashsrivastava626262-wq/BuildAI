@@ -33,7 +33,7 @@ export default function FinalCTA() {
       const message =
         err instanceof ApiError
           ? err.message
-          : 'Unable to submit your request. Please email us directly.'
+          : 'Unable to submit your request. The server may be starting up — please try again or email us directly.'
       setError(message)
     } finally {
       setLoading(false)

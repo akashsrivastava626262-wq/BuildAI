@@ -31,9 +31,9 @@ export const config = {
     host: process.env.SMTP_HOST ?? '',
     port: parseInt(process.env.SMTP_PORT ?? '587', 10),
     secure: process.env.SMTP_SECURE === 'true',
-    user: process.env.SMTP_USER ?? '',
+    user: process.env.SMTP_USER ?? 'akashsrivastava626262@gmail.com',
     pass: process.env.SMTP_PASS ?? '',
-    from: process.env.EMAIL_FROM ?? 'BuildFlow <noreply@buildflow.ai>',
+    from: process.env.EMAIL_FROM ?? 'BuildFlow <akashsrivastava626262@gmail.com>',
     adminEmail: process.env.ADMIN_EMAIL ?? 'akashsrivastava626262@gmail.com',
   },
 

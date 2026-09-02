@@ -32,7 +32,7 @@ services:
       - key: SMTP_SECURE
         value: false
       - key: SMTP_USER
-        sync: false
+        value: akashsrivastava626262@gmail.com
       - key: SMTP_PASS
         sync: false
       - key: EMAIL_FROM

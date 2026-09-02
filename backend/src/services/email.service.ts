@@ -36,6 +36,7 @@ async function sendMail(options: {
   }
 
   if (!transport) {
+    console.log('[EMAIL:DEV] SMTP not configured — would send to:', mailOptions.to)
     console.log('[EMAIL:DEV]', JSON.stringify(mailOptions, null, 2))
     return
   }

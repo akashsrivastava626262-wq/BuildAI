@@ -3,10 +3,11 @@ import { AlertCircle, ChevronDown, Loader2, Mail, Sparkles } from 'lucide-react'
 import {
   ApiError,
   emailAIReport,
-  generateFullPlan,
   type AIFullPlanResult,
   type ConstructionEstimatePayload,
 } from '../lib/api'
+import { generateLocalFullPlan } from '../lib/estimator/generate-plan'
+import { MissingInputsError } from '../lib/estimator/errors'
 
 type Phase = 'idle' | 'processing' | 'complete' | 'error'
 
@@ -88,18 +89,19 @@ export default function AIDemo() {
     }, 450)
 
     try {
-      const response = await generateFullPlan(buildPayload())
+      // Runs in-browser so the demo works without a live backend tunnel.
+      const data = generateLocalFullPlan(buildPayload())
       clearInterval(interval)
       setStepIdx(steps.length - 1)
-      setResult(response.data)
+      setResult(data)
       setPhase('complete')
     } catch (err) {
       clearInterval(interval)
-      setError(
-        err instanceof ApiError
-          ? err.message
-          : 'Unable to reach the estimation engine. Please try again in a minute.',
-      )
+      if (err instanceof MissingInputsError) {
+        setError(err.missingFields.map((f) => f.label).join(', ') + ' required.')
+      } else {
+        setError(err instanceof Error ? err.message : 'Could not calculate estimate. Please check your inputs.')
+      }
       setPhase('error')
     }
   }
